@@ -109,6 +109,7 @@ for action = 1 : 3 % Evaluate all the different actions (left, forward, right)
     %state_action_feats(feature_index, action) = current_1_norm_apple_dist - next_1_norm_apple_dist;
     
     state_action_feats(feature_index, action) = next_1_norm_apple_dist-current_1_norm_apple_dist;
+    %state_action_feats(feature_index, action) = 31-next_1_norm_apple_dist;
     feature_index = feature_index + 1;
     
     
@@ -152,7 +153,21 @@ for action = 1 : 3 % Evaluate all the different actions (left, forward, right)
     
     
       
-    state_action_feats(feature_index, action) = island_badness;
+ 
+    
+    %Instead, order the badness:
+    [~, I] = sort(island_sizes(2:end),'descend');
+    island_rank = find(entering_island == I) - 1;
+    if isempty(island_rank)
+        island_rank = 0;
+    end
+    
+    %state_action_feats(feature_index, action) = island_badness;
+    state_action_feats(feature_index, action) = double(island_rank);
+    if action == 3
+        min_region = min(state_action_feats(feature_index,:));
+        state_action_feats(feature_index, :) = state_action_feats(feature_index,:)-min_region;
+    end    
     feature_index = feature_index+1;
     
     %Check if will go inside smallest bwlabel
@@ -160,6 +175,8 @@ for action = 1 : 3 % Evaluate all the different actions (left, forward, right)
     %Deadly move?
     grid_value_next_head_loc = grid(next_head_loc(1), next_head_loc(2));
     state_action_feats(feature_index, action) = -grid_value_next_head_loc;
+    state_action_feats(feature_index, action) = grid_value_next_head_loc == 1;
+
     feature_index = feature_index + 1;
     
     %Leftover single cell?

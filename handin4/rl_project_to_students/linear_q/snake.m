@@ -49,14 +49,14 @@ show_every_kth = round(1 / show_fraction); % DO NOT CHANGE
 % SETTINGS - SEE EXERCISE 8)
 nbr_feats          = 3;                                             % Number of state-action features per action
 nbr_ep             = 100;                                          % Number of episodes (full games until snake dies) to train
-rewards            = struct('default', -1, 'apple', 1e6, 'death', -1e6); % Experiment with different reward signals, to see which yield a good behaviour for the agent
+rewards            = struct('default', 0, 'apple', 1, 'death', -10); % Experiment with different reward signals, to see which yield a good behaviour for the agent
 gamm               = 0.9;                                           % Discount factor in Q-learning
-alph               = 0.4;                                          % Learning rate in Q-learning
-eps                = 0.1;                                          % Random action selection probability in epsilon-greedy Q-learning (lower: increase exploitation, higher: increase exploration)
-alph_update_iter   = 100;                                             % 0: Never update alpha, Positive integer k: Update alpha every kth episode
-alph_update_factor = 0.9;                                           % At alpha update: new alpha = old alpha * alph_update_factor
+alph               = 0.5;                                          % Learning rate in Q-learning
+eps                = 0.05;                                          % Random action selection probability in epsilon-greedy Q-learning (lower: increase exploitation, higher: increase exploration)
+alph_update_iter   = 10;                                             % 0: Never update alpha, Positive integer k: Update alpha every kth episode
+alph_update_factor = 0.6;                                           % At alpha update: new alpha = old alpha * alph_update_factor
 eps_update_iter    = 10;                                             % 0: Never update eps, Positive integer k: Update eps every kth episode
-eps_update_factor  = 0.94;                                           % At eps update: new eps = old eps * eps_update_factor
+eps_update_factor  = 0.5;                                           % At eps update: new eps = old eps * eps_update_factor
 weights            = randn(nbr_feats, 1);                           % I.i.d. N(0,1) initial weights
 
 % Below two commands are useful when you have tranined your agent and later
@@ -64,10 +64,10 @@ weights            = randn(nbr_feats, 1);                           % I.i.d. N(0
 % testing!
 
 % save('weights.mat', 'weights');
- load weights;alph = 0; eps = 0;%show_fraction  =1; show_every_kth = round(1 / show_fraction);  
-% save('Q_eps_alph', 'Q_vals', 'eps', 'alph');
-%load Q_eps_alph; alph = 0; eps = 0;show_fraction  =1; show_every_kth = round(1 / show_fraction);
-
+% save('weights_ae.mat', 'weights', 'alph', 'eps');
+%load weights;alph = 0; eps = 0;%show_fraction  =1; show_every_kth = round(1 / show_fraction);  
+%load weights; %weights = weights/1e6;
+%load weights_ae.mat
 
 
 % Keep track of high score, minimum score and store all scores 
