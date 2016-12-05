@@ -134,19 +134,26 @@ for action = 1 : 3 % Evaluate all the different actions (left, forward, right)
 %         disp('for testing purposes')
 %     end
 %         
-    
+        
+    %Enters small area?
     next_grid = grid;
     %don't care about the last part of the tail being left, sometimes eats
     %apple
     next_grid(next_head_loc(1), next_head_loc(2)) = 1;
-    [next_l, next_NUM] = bwlabel(next_grid==0, 4);
+    [space_l, space_NUM] = bwlabel(grid ~= 1,4);
     
-    %state_action_feats(feature_index, action) = current_NUM-next_NUM;
-    %feature_index = feature_index+1;
-    if (next_NUM > 1)
-        %disp('blockade')
-        t = 1;
-    end
+    island_sizes = hist(space_l(:), 0:space_NUM);
+    [~, largest_island] = max(island_sizes(2:end));
+    entering_island = space_l(next_head_loc(1), next_head_loc(2));
+    is_ok = (entering_island == 0) + (entering_island==largest_island);
+    island_badness = (is_ok==0)/island_sizes(entering_island+1)*sum(island_sizes);
+    %island_size = island_sizes(entering_island+1);
+    %island_goodness = island_size/sum(island_sizes(2:end))*(2*(entering_island>0)-1);
+    
+    
+      
+    state_action_feats(feature_index, action) = island_badness;
+    feature_index = feature_index+1;
     
     %Check if will go inside smallest bwlabel
     
@@ -155,16 +162,27 @@ for action = 1 : 3 % Evaluate all the different actions (left, forward, right)
     state_action_feats(feature_index, action) = -grid_value_next_head_loc;
     feature_index = feature_index + 1;
     
+    %Leftover single cell?
+%     nbr_leftovers = grid(next_head_loc(1), next_head_loc(2)) == 0;
+%     following_loc = next_head_loc + (head_loc - next_head_loc);
+%     nbr_leftovers = nbr_leftovers + grid(following_loc(1), following_loc(2))==0;
+%     nbr_leftovers = nbr_leftovers == 2;
+%     state_action_feats(feature_index, action) = nbr_leftovers;
+%     feature_index = feature_index + 1;
+
 %    state_action_feats(3, action) = randn();
     feature_index = 1;
 end
-if any(state_action_feats(2,:) == -1)
-    state_action_feats
-end
-if any(isnan(state_action_feats))
-    t=0;
-end
+% if any(state_action_feats(2,:) == -1)
+%     state_action_feats
+% end
+% if any(isnan(state_action_feats))
+%     t=0;
+% end
 %state_action_feats
+% if any(state_action_feats(2,:))
+%     state_action_feats(2,:)
+% end
 end
 
 function [next_head_loc, next_move_dir] = get_next_info(action, movement_dir, head_loc)
