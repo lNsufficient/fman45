@@ -20,7 +20,7 @@ function dldx = softmaxloss_backward(x, labels)
 
     %error('Implement this function');
     labels = labels(:);
-    IND = labels' + sz(1)*(0:batch-1);
+    IND = labels' + uint8(sz(1)*(0:batch-1));
     row_factors = 1./(sum(exp(x),1));
     dldx = 1/batch*exp(x)*(diag(row_factors));
     dldx(IND) = dldx(IND) - 1/batch;

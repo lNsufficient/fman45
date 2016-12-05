@@ -48,7 +48,7 @@ show_every_kth = round(1 / show_fraction); % DO NOT CHANGE
 % Stuff related to learning agent (YOU SHOULD EXPERIMENT A LOT WITH THESE
 % SETTINGS - SEE EXERCISE 8)
 nbr_feats          = 3;                                             % Number of state-action features per action
-nbr_ep             = 100;                                          % Number of episodes (full games until snake dies) to train
+nbr_ep             = 51;                                          % Number of episodes (full games until snake dies) to train
 rewards            = struct('default', 0, 'apple', 1, 'death', -10); % Experiment with different reward signals, to see which yield a good behaviour for the agent
 gamm               = 0.9;                                           % Discount factor in Q-learning
 alph               = 0.5;                                          % Learning rate in Q-learning
@@ -65,9 +65,11 @@ weights            = randn(nbr_feats, 1);                           % I.i.d. N(0
 
 % save('weights.mat', 'weights');
 % save('weights_ae.mat', 'weights', 'alph', 'eps');
-%load weights;alph = 0; eps = 0;%show_fraction  =1; show_every_kth = round(1 / show_fraction);  
+% save('saveall.mat');
+load weights;alph = 0; eps = 0;%show_fraction  =1; show_every_kth = round(1 / show_fraction);  
 %load weights; %weights = weights/1e6;
 %load weights_ae.mat
+
 
 
 % Keep track of high score, minimum score and store all scores 

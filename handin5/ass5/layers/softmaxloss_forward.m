@@ -22,6 +22,6 @@ function L = softmaxloss_forward(x, labels)
 
     %error('Implement this function');
     labels = labels(:);
-    IND = labels' + sz(1)*(0:batch-1);
+    IND = labels' + uint8(sz(1)*(0:batch-1));
     L = mean(-x(IND) + log(sum(exp(x),1)));
 end
