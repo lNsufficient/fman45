@@ -1,0 +1,27 @@
+gamm = 0.95, alph = 0.99, eps = 0.1, update_iter = 0 (båda)
+Testade att variera reward, det visade sig att då man satte apple till 100 eller death till 100 fick man ungefär 5 äpplen efter ep 1000.
+Det verkade inte lönt att justrera default, vilket förvånar mig. Jag tänkte att om den till exempel är negativ så uppmuntras ormen till att jobba snabbare. 
+Genom att sätta väldigt stora apple och negativa death så erhölls 15 efter första 1000 ep. reward = [1, 10000, -100]; Den rör sig dock inte särskilt optimalt Genom att sänka default till 0 blev det lite mer optimalt, men ändå inte så snyggt, dessutom färre poäng. .
+
+Därefter testades att låta alpha minska något kontinuerligt och kördes för 1000 iterationer. Var 100 steg minskades alpha, faktorn var 0.94. Resultatet var att den verkade stanna kring 40 poäng efter 1200 ep (dock krashade sedan min dator så jag vet inte om den skulle tagit steg uppåt vartefter.
+
+Om eps sätt för stort och aldrig avtar så verkar det vara svårt att konvergera mot en bra lösning, det blir bra till en gräns. När denna sedan blir mindre och mindre blir resultaten bättre och bättre. Det verkar som att denna är viktigast till en början.
+
+Samma sak med alpha. Den är så klart viktigast till början. Framåt slutet så ska ju ormen redan va ganska bra, då vill man inte kasta bort gamla fungerande lösningar.
+
+För mig tog det ganska lång tid (ca 1400 ep) innan 100-avarage började stiga. Efter det steg den mer och mer. Detta tyder på att den till slut lärt sig lagom mycket, och var redo på att alpha och eps skulle bli tillräckligt små. När de blev tillrckligt små kunde den växa. 
+
+Med följande inställningar lyckades jag på ca 6000 ep få 99 poäng som 100-avarage.
+nbr_ep             = 6000;               
+rewards            = struct('default', 0, 'apple', 1000000, 'death', -100); 
+gamm               = 0.95;     
+alph               = 0.99;    
+eps                = 0.5;   
+alph_update_iter   = 100;   
+alph_update_factor = 0.94;   
+eps_update_iter    = 10;      
+eps_update_factor  = 0.99;                          
+Q_vals             = randn(nbr_states, nbr_actions); 
+
+
+Med dessa värden tittade jag sedan på ormen i 10 minuter utan att den krashade. Tveksam på om den någonsin kommer göra det! Jag testade även att stänga av det visuella, och efter väldigt lång tid hade den fortfarande inte dött. Den beter sig också ganska optimalt när man studerar den. Ibland tar den avvikande vägar, men oftast kör den snyggt rakt på nästa poäng!
